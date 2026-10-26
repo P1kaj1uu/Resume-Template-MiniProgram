@@ -1,0 +1,2 @@
+App({globalData:{storageMode:'local'}});
+

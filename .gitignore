@@ -1,0 +1,34 @@
+# Dependencies and WeChat npm build output
+node_modules/
+miniprogram_npm/
+
+# WeChat DevTools local settings
+project.private.config.json
+
+# Test output, previews and caches
+/artifacts/
+/coverage/
+.nyc_output/
+.cache/
+*.tsbuildinfo
+*.log
+
+# Local environment files (keep examples versioned)
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Editor and operating system files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+._*
+Thumbs.db
+Desktop.ini
+
+# Keep package-lock.json and the bundled PDF parser/maps versioned:
+# they are required for reproducible installs and direct DevTools imports.

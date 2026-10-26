@@ -1,0 +1,56 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/templates/templates",
+    "pages/resumes/resumes",
+    "pages/profile/profile",
+    "pages/editor/editor",
+    "pages/preview/preview",
+    "pages/optimize/optimize",
+    "pages/legal/legal"
+  ],
+  "window": {
+    "navigationStyle": "custom",
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "好简历",
+    "backgroundColor": "#f7f8f4"
+  },
+  "tabBar": {
+    "custom": true,
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/templates/templates",
+        "text": "模板"
+      },
+      {
+        "pagePath": "pages/resumes/resumes",
+        "text": "简历"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的"
+      }
+    ]
+  },
+  "usingComponents": {
+    "page-head": "/components/page-head/page-head",
+    "resume-paper": "/components/resume-paper/resume-paper",
+    "ui-icon": "/components/ui-icon/ui-icon"
+  },
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents",
+  "sitemapLocation": "sitemap.json",
+  "subPackages": [
+    {
+      "root": "packages/pdf-reader",
+      "name": "pdf-reader",
+      "pages": [
+        "index/index"
+      ]
+    }
+  ]
+}

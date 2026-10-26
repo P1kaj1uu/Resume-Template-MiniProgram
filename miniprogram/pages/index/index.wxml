@@ -1,0 +1,25 @@
+<page-head/>
+<view class="page tab-page home-page">
+ <view wx:if="{{loadError}}" class="notice error">{{loadError}}<button class="link" bindtap="onShow">重新读取</button></view>
+
+ <view class="greeting"><text>求职这件事，先准备好一份简历。</text><view class="greeting-line"></view></view>
+ <view class="hero">
+  <view class="hero-label"><view class="tiny-dot"></view>从一张白纸，到一份好简历</view>
+  <view class="hero-title">认真写一份，<view>属于你的简历。</view></view>
+  <view class="hero-desc">选一款合适的排版，<view>把经历和成果慢慢写清楚。</view></view>
+  <button class="hero-button" bindtap="start">开始写简历 <ui-icon name="arrow-right" size="32" weight="2"/></button>
+  <view class="hero-foot">随写随存　·　导出无水印</view>
+  <view class="hero-art"><view class="back-paper"></view><view class="art-paper"><view class="art-head"><view><view class="art-name">林知夏</view><view class="art-job">求职意向：产品运营</view></view><view class="art-avatar">林</view></view><view class="art-section">工作经历</view><view class="art-bold">某互联网科技有限公司</view><view class="art-text">产品运营　2024.07 — 至今</view><view class="art-lines"><view></view><view></view><view></view></view><view class="art-section">项目经历</view><view class="art-bold">新用户成长计划</view><view class="art-lines"><view></view><view></view></view><view class="art-section">教育经历</view><view class="art-bold">浙江工商大学 · 本科</view><view class="art-lines"><view></view></view></view><view class="art-note">把做过的事，<view>写成看得见的成绩。</view></view></view>
+ </view>
+ <view class="quick-grid">
+  <view class="quick-card templates-entry" bindtap="goTemplates"><view class="quick-top"><view class="quick-glyph"><ui-icon name="layout" size="38"/></view><text>{{templateCount}} 款</text></view><view class="quick-title">挑一款模板 <ui-icon name="arrow-up-right" size="28"/></view><view class="quick-desc">{{layoutCount}} 种版式，按岗位和风格筛选</view></view>
+  <view class="quick-card optimize-entry" bindtap="goOptimize"><view class="quick-top"><view class="quick-glyph"><ui-icon name="scan" size="38"/></view><text>查漏补缺</text></view><view class="quick-title">给简历做体检 <ui-icon name="arrow-up-right" size="28"/></view><view class="quick-desc">选择本机简历，或粘贴文字检查</view></view>
+ </view>
+ <view class="section-head"><view class="section-title">最近编辑 <text class="count" wx:if="{{resumeCount}}">{{resumeCount}} 份</text></view><view class="section-link" bindtap="goResumes">全部简历 <ui-icon name="chevron-right" size="24"/></view></view>
+ <view wx:if="{{recent}}" class="recent card" bindtap="editRecent"><view class="file-symbol"><ui-icon name="file" size="36"/></view><view class="recent-content"><view class="recent-title">{{recent.title}}</view><view class="small muted">{{recent.date}}更新 · {{recent.template.name}}</view><view class="progress"><view style="width:{{recent.progress}}%"></view></view></view><view class="continue-label">继续编辑<ui-icon name="arrow-right" size="26"/></view></view>
+ <view wx:else class="create-card" bindtap="start"><view class="plus"><ui-icon name="plus" size="34"/></view><view class="create-text"><view class="recent-title">这里会留着你正在写的简历</view><view class="small muted">不必一次写完，想起来再补两笔。</view></view><ui-icon name="arrow-right" size="28" color="#95a18b"/></view>
+ <view class="section-head"><view><view class="section-title">几款耐看的排版</view><view class="section-sub">先看结构，再选喜欢的颜色。</view></view><view class="section-link" bindtap="goTemplates">去模板馆 <ui-icon name="chevron-right" size="24"/></view></view>
+ <view class="template-grid"><view wx:for="{{featured}}" wx:key="id" class="template-card" bindtap="templateDetail" data-id="{{item.id}}"><view class="template-cover" style="background:{{item.tint}}"><view class="mini-paper"><resume-paper design="{{item}}" thumbnail="{{true}}"/></view><view class="template-badge">免费使用</view></view><view class="template-info"><view class="template-name">{{item.name}}<ui-icon name="arrow-up-right" size="28"/></view><view class="template-tags">{{item.tags[0]}} · {{item.group}}排版</view></view></view></view>
+ <view class="writing-tip"><view class="tip-mark"><ui-icon name="pencil" size="30"/></view><view><view class="tip-title">写之前，先想一想</view><view>除了「负责什么」，也写写「做成了什么」。<view>具体的成果，往往比一串形容词更有分量。</view></view></view></view>
+ <view class="footer-note">草稿会自动保存，随时回来继续写。</view>
+</view>

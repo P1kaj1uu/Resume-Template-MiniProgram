@@ -1,0 +1,1 @@
+Component({properties:{section:{type:Object,value:{}},design:{type:Object,value:{}},heading:{type:String,value:'line'}},methods:{copyLink(e){const url=e.currentTarget.dataset.url;if(url)wx.setClipboardData({data:url,fail:()=>wx.showToast({title:'复制未完成，请检查剪贴板权限',icon:'none'})});}}});

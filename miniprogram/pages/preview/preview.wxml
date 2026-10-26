@@ -1,0 +1,19 @@
+<page-head title="{{isSample?'模板详情':'简历预览'}}" back/>
+<view wx:if="{{missing}}" class="page empty"><view class="empty-title">{{loadError?'本机资料暂时无法读取':'这份简历已不存在'}}</view><view class="muted">{{loadError||'返回简历夹重新选择，已有内容不会被覆盖。'}}</view><button wx:if="{{loadError}}" bindtap="retryLoad">重新读取</button><button bindtap="home">返回简历夹</button></view>
+<block wx:else>
+ <view class="page preview-page">
+  <view class="eyebrow">{{targetId?'保留内容，更换排版':isSample?'先看看排版，再决定用哪款':'检查完成，就可以导出了'}}</view>
+  <view class="row"><view class="page-title">{{template.name}}</view><view wx:if="{{!isSample}}" class="change-link" bindtap="gallery">换款模板 <ui-icon name="layout" size="27"/></view><view wx:else class="pill">{{unlocked?'可直接使用':'观看视频解锁'}}</view></view>
+  <view class="subtitle">{{template.caption}}</view>
+  <view wx:if="{{isSample}}" class="variant-row"><view class="variant-label">换个配色</view><scroll-view scroll-x enhanced show-scrollbar="{{false}}" class="color-scroll"><view class="color-options"><view wx:for="{{variants}}" wx:key="id" class="color-option {{template.id===item.id?'selected':''}}" style="background:{{item.color}}" data-id="{{item.id}}" bindtap="variant" aria-label="{{item.palette}}配色"><ui-icon wx:if="{{template.id===item.id}}" name="check" size="23" color="#fff" weight="2.5"/></view></view></scroll-view></view>
+  <view wx:if="{{targetId}}" class="target-note">正在预览「{{targetTitle}}」的内容，点击应用后生效。</view>
+  <view wx:if="{{prepareError}}" class="notice error">{{prepareError}}<button class="outline prepare-retry" bindtap="prepareFile">重新准备文件</button></view>
+  <view wx:if="{{exportedFile}}" class="download-card"><view class="download-title">简历文件已生成</view><view class="download-name">{{exportedName}}</view><view class="download-status">{{fileStatus}}</view><view class="download-actions"><button class="outline" bindtap="viewFile" disabled="{{busy}}">查看文件</button><button bindtap="saveFile" disabled="{{busy}}">{{saveLabel}}</button></view></view>
+  <view wx:if="{{!isSample}}" class="export-overview"><view><text class="export-page-count">{{pageCount}}</text><text>页导出文件</text></view><view class="small muted">核心信息已填写 {{coreProgress}}%</view></view><view wx:if="{{measureError}}" class="notice error">{{measureError}}</view><view wx:if="{{!isSample && (exportWarnings.length || exportErrors.length)}}" class="review-card"><view class="review-title">可以再检查一下</view><view wx:for="{{exportErrors}}" wx:key="title" class="review-error">· {{item.title}}</view><view wx:for="{{exportWarnings}}" wx:key="title">· {{item.title}}</view><view class="review-edit" bindtap="edit">返回编辑补充 <ui-icon name="arrow-right" size="25"/></view></view><view class="preview-sheet"><resume-paper content="{{previewContent}}" design="{{template}}"/></view>
+  <view class="preview-meta"><text>标准纸张 · {{pageCount}} 页</text><text>文字可选中</text><text>无水印导出</text></view>
+  <view wx:if="{{isSample && !targetId}}" class="notice">这是示例简历。选择模板后，填写你自己的真实经历。</view>
+  <view wx:elif="{{targetId}}" class="notice">更换模板只调整排版，已填写的经历、联系方式和技能都会保留。</view>
+  <view wx:else class="notice">{{downloadHint}}长内容会自动分页，作品网址可在文件中打开。</view>
+ </view>
+ <view class="fixed-actions"><block wx:if="{{isSample}}"><button class="outline favorite-action" bindtap="favorite"><ui-icon name="heart" size="30" filled="{{favorite}}"/><text>{{favorite?'已收藏':'收藏'}}</text></button><button bindtap="use" loading="{{busy}}" disabled="{{busy}}">{{targetId?'应用到这份简历':unlocked?'使用这款模板':'观看视频后使用'}}</button></block><block wx:else><button class="outline" bindtap="edit">返回编辑</button><button class="download-action" bindtap="export" loading="{{busy}}" disabled="{{busy || preparing || !preparedFile || measureError || exportErrors.length}}"><ui-icon wx:if="{{!preparing}}" name="download" size="30" weight="2"/><text>{{preparing?'正在准备文件…':'下载简历'}}</text></button></block></view>
+</block>

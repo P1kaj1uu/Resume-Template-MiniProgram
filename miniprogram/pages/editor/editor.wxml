@@ -1,0 +1,54 @@
+<page-head title="编辑简历" back/>
+<view wx:if="{{loadError}}" class="page"><view class="notice error">{{loadError}}</view><button class="outline" bindtap="retryLoad">重新读取</button></view>
+<view wx:if="{{resume}}" class="page edit-page">
+ <view class="editor-top"><view class="eyebrow">写到哪儿，保存到哪儿</view><view class="row"><input class="resume-title" maxlength="40" value="{{resume.title}}" data-path="resume.title" bindinput="input" bindblur="input" cursor-spacing="112"/><text class="save-state">{{saved}}</text></view><view class="completion"><view style="width:{{progress}}%"></view></view><view class="row small muted"><text>核心信息完整度 {{progress}}%</text><view class="editor-shortcuts"><text bindtap="checkpoint">存个版本</text><text bindtap="example">看看示例</text></view></view></view>
+ <view class="editor-tabs"><view wx:for="{{tabs}}" wx:key="*this" data-index="{{index}}" bindtap="tab" class="{{active===index?'active':''}}">{{item}}</view></view>
+ <view wx:if="{{active===0}}" class="card">
+  <view class="section-title">基本资料</view><view class="form-caption">留下准确的姓名、职位和联系方式。</view>
+  <view class="field"><text class="label">简历模板</text><view class="input row template-choice" bindtap="templateGallery"><text>{{templates[templateIndex].name}}</text><view class="template-choice-label muted">更换模板 <ui-icon name="chevron-right" size="25"/></view></view></view>
+  <view class="form-grid">
+   <view class="field"><text class="label">姓名 *</text><input class="input" maxlength="30" placeholder="你的姓名" value="{{resume.content.name}}" data-path="resume.content.name" bindinput="input" bindblur="input" cursor-spacing="112"/></view>
+   <view class="field"><text class="label">所在城市</text><input class="input" maxlength="30" placeholder="例如：杭州" value="{{resume.content.city}}" data-path="resume.content.city" bindinput="input" bindblur="input" cursor-spacing="112"/></view>
+   <view class="field full"><text class="label">目标职位 *</text><input class="input" maxlength="60" placeholder="准备投递的职位" value="{{resume.content.role}}" data-path="resume.content.role" bindinput="input" bindblur="input" cursor-spacing="112"/></view>
+   <view class="field full"><text class="label">联系电话</text><input class="input" type="text" maxlength="30" placeholder="常用电话，可包含国际区号" value="{{resume.content.phone}}" data-path="resume.content.phone" bindinput="input" bindblur="input" cursor-spacing="112"/></view>
+   <view class="field full"><text class="label">电子邮箱</text><input class="input" maxlength="100" placeholder="填写常用邮箱" value="{{resume.content.email}}" data-path="resume.content.email" bindinput="input" bindblur="input" cursor-spacing="112"/></view>
+  </view>
+ </view>
+ <view wx:if="{{active===2}}" class="card advantages-card">
+  <view class="section-title">优势与技能</view><view class="form-caption">优先写与目标岗位有关、能举出例子的能力。</view>
+  <view class="field"><text class="label">个人优势</text><textarea maxlength="1200" auto-height placeholder="用几句话介绍相关经验、擅长的工作和能带来的价值。" value="{{resume.content.summary}}" data-path="resume.content.summary" bindinput="input" bindblur="input" cursor-spacing="112"/></view>
+  <view class="field"><text class="label">专业技能</text><textarea maxlength="1200" auto-height placeholder="填写相关工具、技术和职业能力。语言、证书可在下方单独补充。" value="{{resume.content.skills}}" data-path="resume.content.skills" bindinput="input" bindblur="input" cursor-spacing="112"/></view>
+ </view>
+ <block wx:if="{{active===1 || active===2}}">
+  <block wx:for="{{sections}}" wx:for-item="section" wx:key="key">
+   <view wx:if="{{section.tab===active}}" class="experience-section" id="section-{{section.key}}">
+    <view class="section-head"><view class="section-heading-text" data-key="{{section.key}}" bindtap="toggleSection"><view class="section-title">{{section.title}}<text class="entry-count">{{resume.content[section.key].length}} 条</text><ui-icon class="fold-mark" name="{{expanded[section.key]?'chevron-up':'chevron-down'}}" size="25"/></view><view class="form-caption">{{section.hint}}</view></view><button class="link add-entry" catchtap="add" data-key="{{section.key}}"><ui-icon name="plus" size="27"/> 添加</button></view>
+    <view wx:if="{{!resume.content[section.key].length}}" class="add-empty" data-key="{{section.key}}" bindtap="add"><view class="add-empty-title"><ui-icon name="plus" size="28"/>添加{{section.title}}</view><view>选填，没有相关内容可以留空</view></view>
+    <block wx:if="{{expanded[section.key]}}">
+     <view wx:for="{{resume.content[section.key]}}" wx:for-item="entry" wx:for-index="entryIndex" wx:key="id" class="card entry-card">
+      <view class="entry-toolbar"><view class="entry-number">第 {{entryIndex+1}} 条</view><view class="entry-order"><text wx:if="{{entryIndex>0}}" data-key="{{section.key}}" data-index="{{entryIndex}}" data-offset="-1" bindtap="move">上移</text><text wx:if="{{entryIndex+1<resume.content[section.key].length}}" data-key="{{section.key}}" data-index="{{entryIndex}}" data-offset="1" bindtap="move">下移</text></view></view>
+      <view wx:for="{{section.fields}}" wx:for-item="field" wx:key="key" class="field"><text class="label">{{field.label}}</text><textarea wx:if="{{field.multiline}}" maxlength="2400" placeholder="{{field.placeholder}}" value="{{entry[field.key]}}" data-path="resume.content.{{section.key}}[{{entryIndex}}].{{field.key}}" bindinput="input" bindblur="input" cursor-spacing="112" auto-height/><input wx:else class="input" maxlength="{{field.key==='url'?400:field.key==='title'?30:100}}" placeholder="{{field.placeholder}}" value="{{entry[field.key]}}" data-path="resume.content.{{section.key}}[{{entryIndex}}].{{field.key}}" bindinput="input" bindblur="input" cursor-spacing="112"/></view>
+      <view class="delete-link" data-key="{{section.key}}" data-index="{{entryIndex}}" bindtap="remove">移除这条内容</view>
+     </view>
+    </block>
+    <view wx:elif="{{resume.content[section.key].length}}" class="collapsed-hint" data-key="{{section.key}}" bindtap="toggleSection">已填写 {{resume.content[section.key].length}} 条，点击展开编辑 <ui-icon name="chevron-right" size="25"/></view>
+   </view>
+  </block>
+ </block>
+ <block wx:if="{{active===3}}">
+  <view class="card typography-card"><view class="row"><view class="section-title">排版微调</view><button class="link" bindtap="compact">试试紧凑排版</button></view><view class="form-caption">调整后，可在预览中查看实际导出页数。</view>
+   <view wx:for="{{preferenceGroups}}" wx:key="key" wx:for-item="group" class="preference-block"><view class="label">{{group.title}}</view><view class="preference-options"><view wx:for="{{preferenceOptions[group.key]}}" wx:for-item="choice" wx:key="value" class="preference-choice {{resume.content.preferences[group.key]===choice.value?'selected':''}}" data-key="{{group.key}}" data-value="{{choice.value}}" bindtap="preference">{{choice.name}}</view></view></view>
+  </view>
+  <view class="card section-manager"><view class="row"><view class="section-title">栏目顺序与显示</view><button class="link" bindtap="resetOrder">按模板恢复</button></view><view class="form-caption">隐藏时内容仍保留，预览和导出会略过。双栏模板在各栏内分别排序。</view>
+   <view wx:for="{{orderRows}}" wx:key="key" class="order-row {{item.hidden?'is-hidden':''}}"><view class="order-main"><text class="order-number">{{index+1}}</text><text>{{item.title}}</text></view><view class="order-actions"><view wx:if="{{index>0}}" data-index="{{index}}" data-offset="-1" bindtap="moveSection" class="order-move" role="button" aria-label="上移栏目"><ui-icon name="arrow-up" size="28"/></view><view wx:if="{{index+1<orderRows.length}}" data-index="{{index}}" data-offset="1" bindtap="moveSection" class="order-move" role="button" aria-label="下移栏目"><ui-icon name="arrow-down" size="28"/></view><switch checked="{{!item.hidden}}" color="#315d4d" data-key="{{item.key}}" bindchange="visibleSection"/></view></view>
+  </view>
+  <view class="card version-card"><view class="row"><view class="section-title">本机版本记录</view><button class="link" bindtap="checkpoint"><ui-icon name="plus" size="26"/> 保存当前版本</button></view><view class="form-caption">每份最多五个版本，仅存本机。空间有限时会清理较早记录，重要内容请及时导出。</view>
+   <view wx:if="{{versionError}}" class="notice error">{{versionError}}</view><view wx:if="{{!versions.length && !versionError}}" class="version-empty">重要修改前，先存个版本，之后可以找回。</view>
+   <view wx:for="{{versions}}" wx:key="id" class="version-row"><view><view class="version-name">{{item.label}}</view><view class="small muted">{{item.date}} · {{item.template}}</view></view><button class="link" data-id="{{item.id}}" bindtap="restore" disabled="{{restoreBusy}}">恢复</button></view>
+   <view wx:if="{{versions.length}}" class="delete-link clear-history" bindtap="clearHistory">清空这份简历的版本记录</view>
+  </view>
+ </block>
+ <view class="privacy-note">草稿自动保存至本机，重要内容可另存版本或导出。</view>
+</view>
+<view wx:if="{{resume && !keyboardVisible}}" class="fixed-actions"><button class="outline" bindtap="save"><ui-icon name="save" size="28"/> 保存草稿</button><button bindtap="preview">预览与导出 <ui-icon name="arrow-right" size="28"/></button></view>
+

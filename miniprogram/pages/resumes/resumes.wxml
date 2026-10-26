@@ -1,0 +1,15 @@
+<page-head/><view class="page tab-page resume-page">
+ <view wx:if="{{loadError}}" class="notice error">{{loadError}}<button class="link" bindtap="refresh">重新读取</button></view>
+ <view class="eyebrow">简历管理</view><view class="page-title">按机会，准备不同的简历</view><view class="subtitle">可以复制一份，再针对新的岗位调整。</view>
+ <view class="search-box"><ui-icon name="search" size="34" color="#899589"/><input placeholder="搜索名称、姓名或职位" bindinput="search" value="{{query}}"/></view>
+ <view class="resume-tools"><text>共 {{list.length}} 份</text><picker range="{{sorts}}" value="{{sortIndex}}" bindchange="sort"><view>{{sorts[sortIndex]}} <ui-icon name="chevron-down" size="25"/></view></picker></view>
+ <button class="new-resume" bindtap="create"><view class="new-resume-label"><ui-icon name="plus" size="32" weight="2"/><text>新建一份简历</text></view><view class="new-resume-hint">从空白开始 <ui-icon name="arrow-right" size="26"/></view></button>
+ <view wx:if="{{!list.length}}" class="empty"><view class="empty-icon"><ui-icon name="file" size="44"/></view><view class="empty-title">{{query?'没有找到这份简历':'写到一半，也会替你留着'}}</view><view class="muted small">{{query?'换个关键词，或清空搜索再看看。':'新建一份简历，填过的内容会自动保存。'}}</view></view>
+ <view wx:for="{{list}}" wx:key="id" class="resume-item card">
+  <view class="row"><view class="resume-item-title" data-id="{{item.id}}" bindtap="edit">{{item.title || '未命名简历'}}</view><view class="more" data-id="{{item.id}}" bindtap="more" aria-label="更多操作" role="button"><ui-icon name="more" size="36"/></view></view>
+  <view class="resume-summary" data-id="{{item.id}}" bindtap="edit"><view class="file-symbol"><ui-icon name="file" size="38"/></view><view><view class="resume-name">{{item.content.name || '待填写姓名'}} <text>{{item.content.role || '添加目标职位'}}</text></view><view class="small muted">{{item.template.name}} · {{item.date}}更新</view></view></view>
+  <view class="row small muted"><text>内容完整度</text><text>{{item.progress}}%</text></view><view class="progress"><view style="width:{{item.progress}}%"></view></view>
+  <view class="resume-actions"><button class="ghost" data-id="{{item.id}}" bindtap="preview">预览与导出</button><button data-id="{{item.id}}" bindtap="edit">继续编辑 <ui-icon name="arrow-right" size="28"/></button></view>
+ </view>
+ <view class="footer-note">简历保存在当前设备，重要内容记得导出留存。</view>
+</view>

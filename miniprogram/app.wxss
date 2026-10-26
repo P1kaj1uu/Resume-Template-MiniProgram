@@ -1,0 +1,34 @@
+page{
+ background:#f6f7f2;color:#2c3a31;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;font-size:28rpx;line-height:1.65;
+ --green:#315d4d;--mint:#e9efe5;--ink:#2c3a31;--muted:#7e897a;
+}
+view,button,input,textarea{box-sizing:border-box}
+button{margin:0;display:flex;align-items:center;justify-content:center;gap:12rpx;min-height:88rpx;border-radius:16rpx;font-size:27rpx;font-weight:600;line-height:1.5;padding:22rpx 26rpx;background:#315d4d;color:#fff;transition:transform 120ms cubic-bezier(.2,0,0,1)}
+button:not([size='mini']){width:100%;margin:0}button::after{border:0}button:active{transform:scale(.96)}
+button[disabled]{background:#e1e7dc;color:#9aa591}button.ghost{background:#edf2e8;color:#5c7753}button.outline{background:#fff;color:#526f49;border:1rpx solid #d6e0ce}
+button.link{display:inline-flex;width:auto;min-height:64rpx;padding:8rpx 0;background:transparent;color:#627d51;font-weight:500;font-size:23rpx;text-align:left}
+button.danger{background:#f8eee7;color:#a66d51}
+.page{padding:20rpx 36rpx 64rpx}.tab-page{padding-bottom:210rpx}
+.eyebrow{font-size:21rpx;letter-spacing:2rpx;color:#88947e;font-weight:400}
+.muted{color:#808c78}.small{font-size:22rpx}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:20rpx;margin:40rpx 0 23rpx}
+.section-title{font-size:31rpx;font-weight:600;letter-spacing:1rpx}.section-link{display:flex;align-items:center;gap:5rpx;font-size:22rpx;color:#7c8f6d;padding:12rpx 0 12rpx 15rpx;white-space:nowrap}
+.card{background:#fff;border:0;border-radius:22rpx;padding:29rpx;box-shadow:0 0 0 1rpx rgba(0,0,0,.045),0 2rpx 4rpx -2rpx rgba(0,0,0,.06),0 4rpx 8rpx rgba(0,0,0,.025)}
+.row{display:flex;align-items:center;justify-content:space-between}
+.pill{display:inline-flex;align-items:center;background:#eaf0e4;color:#728862;font-size:19rpx;padding:6rpx 13rpx;border-radius:7rpx;white-space:nowrap}
+.page-title{font-size:44rpx;font-weight:600;letter-spacing:1rpx;margin:12rpx 0;line-height:1.5}.subtitle{font-size:24rpx;color:#818b79;line-height:1.85}
+.empty{text-align:center;padding:65rpx 24rpx}.empty-title{font-size:29rpx;font-weight:550;margin:23rpx 0 10rpx}.empty-icon{width:96rpx;height:110rpx;border:1rpx solid #dae3d0;border-radius:16rpx;color:#81976d;margin:0 auto;display:flex;align-items:center;justify-content:center;background:#edf2e5}
+.empty button{margin:28rpx auto 0;max-width:330rpx;font-size:24rpx}
+.chips{display:flex;gap:15rpx;white-space:nowrap;padding:25rpx 0}.chip{flex-shrink:0;padding:12rpx 25rpx;background:#fff;border:1rpx solid #e2e8d7;border-radius:10rpx;color:#7f8c71;font-size:24rpx}.chip.active{background:#315d4d;color:#fff;border-color:#315d4d}
+.field{margin-bottom:26rpx}.label{display:block;font-size:25rpx;font-weight:550;margin-bottom:13rpx;color:#3d4c40}
+.input,textarea{width:100%;background:#f8faf4;border:1rpx solid #e0e7d9;border-radius:12rpx;padding:20rpx 22rpx;font-size:27rpx;color:#40553d}
+.input{height:86rpx}input.input{padding:0 22rpx;line-height:normal}.input:focus,textarea:focus{background:#fff;border-color:#9eaf91}textarea{height:210rpx;line-height:1.85}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 20rpx}.full{grid-column:1 / -1}
+.fixed-actions{position:fixed;left:0;right:0;bottom:0;padding:19rpx 36rpx calc(21rpx + env(safe-area-inset-bottom));background:#fff;border-top:1rpx solid #e9ede3;box-shadow:0 -5rpx 24rpx rgba(0,0,0,.025);display:flex;gap:18rpx;z-index:30}.fixed-actions button{flex:1}
+.notice{background:#edf2e6;color:#7e916d;border-radius:14rpx;padding:23rpx;font-size:23rpx;line-height:1.9}.error{background:#fbf1e8;color:#a57553}
+.spinner{width:38rpx;height:38rpx;border:3rpx solid #dfe7d4;border-top-color:#718b5e;border-radius:50%;margin:0 auto 24rpx;animation:spin 1s linear infinite}
+.divider{height:1rpx;background:#e7eddf;margin:25rpx 0}.delete-link{font-size:22rpx;color:#ac8062;padding:16rpx 0}.footer-note{text-align:center;font-size:20rpx;color:#99a58c;margin:38rpx 0 10rpx;letter-spacing:1rpx}
+.check-item{display:flex;align-items:center;gap:7rpx;font-size:20rpx;padding:6rpx 12rpx;background:#edf3e8;color:#718c60;border-radius:8rpx}.checks .check-item text{background:none;padding:0;color:inherit;font-size:inherit}
+@keyframes spin{to{transform:rotate(360deg)}}@media(prefers-reduced-motion:reduce){.spinner{animation:none}button{transition:none}button:active{transform:none}}
+button{min-height:44px}.fixed-actions button{min-height:44px}.save-state{line-height:1.6;overflow-wrap:anywhere}
+.input,button.link,.section-link{min-height:44px}.chip{min-height:44px;display:inline-flex;align-items:center;justify-content:center}
+

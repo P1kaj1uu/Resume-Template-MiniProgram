@@ -1,0 +1,18 @@
+<page-head title="简历体检" back/>
+<view class="page optimize-page">
+ <view wx:if="{{loadError}}" class="notice error">{{loadError}}<button class="link" bindtap="onShow">重新读取</button></view>
+
+ <view class="eyebrow">写完之后，再看一遍</view><view class="page-title">检查有没有遗漏，<view>也看看哪里能写得更好。</view></view><view class="subtitle">从信息、经历和成果表达中，找出可以改进的地方。</view>
+ <view class="mode-switch"><view class="{{mode==='local'?'active':''}}" data-mode="local" bindtap="mode">本机简历</view><view bindtap="file">{{fileLoading?'正在加载…':'本机文件'}}</view><view class="{{mode==='text'?'active':''}}" data-mode="text" bindtap="mode">粘贴文字</view></view>
+ <view wx:if="{{mode==='local'}}" class="card local-resume">
+  <block wx:if="{{resumes.length}}"><text class="label">选择要检查的简历</text><picker range="{{resumes}}" range-key="title" value="{{resumeIndex}}" bindchange="select"><view class="resume-choice"><view><view class="choice-title">{{resumes[resumeIndex].title}}</view><view class="small muted">{{resumes[resumeIndex].name}} · {{resumes[resumeIndex].role}}</view></view><ui-icon name="chevron-down" size="27"/></view></picker><view class="local-note">按当前简历中展示的栏目检查，隐藏内容不会参与。</view></block>
+  <block wx:else><view class="choice-title">还没有本机简历</view><view class="local-note">先写一份简历，或切换到粘贴文字开始检查。</view><button class="outline" bindtap="create">开始写简历 <ui-icon name="arrow-right" size="28"/></button></block>
+ </view>
+ <view wx:else class="card text-zone"><text class="label">粘贴简历中的文字</text><textarea value="{{text}}" data-key="text" bindinput="input" maxlength="16000" placeholder="至少五十字。可以从简历文件中复制经历、教育和技能等文字。"/><view class="small muted">只在当前设备检查，文字不会上传</view></view>
+ <view class="card job-card"><text class="label">准备投递什么岗位？<text class="optional">选填</text></text><textarea maxlength="3000" value="{{job}}" data-key="job" bindinput="input" placeholder="写下岗位名称，或粘贴职位要求，检查内容是否相关。"/></view>
+ <view wx:if="{{error}}" class="notice error">{{error}}</view>
+ <button class="analyze-button" bindtap="run" disabled="{{busy}}" loading="{{busy}}">开始检查 <ui-icon name="arrow-right" size="28"/></button>
+ <view class="offline-note">所有检查都在本机完成</view>
+ <view wx:if="{{report}}" class="report" id="report"><view class="section-head"><view class="section-title">检查结果</view><view class="pill">{{report.source}}</view></view><view class="report-summary card"><view class="report-number">{{report.passed}}<text>/ {{report.total}}</text></view><view class="report-label">项基础检查已覆盖</view><view class="summary-text">{{report.summary}}</view><view class="checks"><view class="check-item" wx:for="{{report.strengths}}" wx:key="*this"><ui-icon name="check" size="22"/><text>{{item}}</text></view></view></view><view wx:for="{{report.issues}}" wx:key="title" class="advice card"><view class="advice-index">0{{index+1}}</view><view><view class="advice-title">{{item.title}}</view><view class="advice-text">{{item.suggestion}}</view></view></view><view class="notice">{{report.note || '建议仅供参考，请核实事实后采用。'}}</view><button class="outline copy-button" bindtap="copy">复制修改建议</button></view>
+ <view class="tips"><view class="tips-title">检查时，可以多留意这三点</view><view><text>一</text> 经历与想投递的岗位有关吗？</view><view><text>二</text> 写清楚自己做了什么、带来什么结果了吗？</view><view><text>三</text> 删掉重复表述后，是否还能讲清楚？</view></view>
+</view>

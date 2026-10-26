@@ -1,0 +1,9 @@
+<view class="section {{design.style}} {{design.density}} heading-{{heading}}" style="--accent:{{design.color || '#315d4d'}};--tint:{{design.tint || '#e8eee8'}};--body-size:{{design.bodySize || 16}}rpx;--entry-size:{{design.entrySize || 18}}rpx;--heading-size:{{design.headingSize || 21}}rpx">
+  <view class="heading"><text wx:if="{{heading==='number'}}" class="section-number">{{section.number}}</text><text>{{section.title}}</text><view class="heading-stroke"></view></view>
+  <view wx:if="{{section.body}}" class="body">{{section.body}}</view>
+  <view wx:for="{{section.entries}}" wx:key="id" class="entry">
+    <view class="entry-top"><text class="primary">{{item.primary}}</text><text class="period">{{item.period}}</text></view>
+    <view wx:if="{{item.secondary}}" class="secondary {{section.key==='links'?'link-secondary':''}}" data-url="{{section.key==='links'?item.secondary:''}}" bindtap="copyLink">{{item.secondary}}</view>
+    <view wx:if="{{item.detail}}" class="body">{{item.detail}}</view>
+  </view>
+</view>

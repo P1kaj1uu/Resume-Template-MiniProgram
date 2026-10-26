@@ -1,0 +1,1 @@
+<view aria-hidden="true" class="glyph" style="width:{{size}}{{unit==='px'?'px':'rpx'}};height:{{size}}{{unit==='px'?'px':'rpx'}};color:{{color||'inherit'}};mask-image:url({{src}});-webkit-mask-image:url({{src}})"></view>

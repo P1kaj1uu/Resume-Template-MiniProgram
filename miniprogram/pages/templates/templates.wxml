@@ -1,0 +1,21 @@
+<page-head/>
+<view class="page tab-page template-page">
+ <view wx:if="{{loadError}}" class="notice error">{{loadError}}<button class="link" bindtap="onShow">重新读取</button></view>
+
+ <view class="page-heading"><view><view class="eyebrow">模板馆</view><view class="page-title">找一份合适的排版</view></view><view class="catalog-seal"><text>{{catalogCount}}</text><view>款可选</view></view></view>
+ <view class="subtitle">单栏、双栏、商务或简约，按自己的经历来选。</view>
+ <view wx:if="{{target}}" class="target-banner"><view><view>正在为「{{target.title}}」更换模板</view><text>内容保留，只调整排版</text></view><view class="target-close" bindtap="cancelTarget">取消</view></view>
+ <view class="search-box"><ui-icon name="search" size="34" color="#899589"/><input placeholder="搜索名称、岗位、风格或颜色" value="{{query}}" bindinput="search" confirm-type="search"/><view wx:if="{{query}}" class="clear-search" bindtap="clearSearch" aria-label="清空搜索" role="button"><ui-icon name="close" size="30"/></view></view>
+ <scroll-view scroll-x enhanced show-scrollbar="{{false}}"><view class="chips"><view wx:for="{{categories}}" wx:key="*this" class="chip {{active===item?'active':''}}" data-value="{{item}}" bindtap="filter">{{item}}</view></view></scroll-view>
+ <view class="filter-bar"><view class="access-options"><view wx:for="{{['全部','免费','新增','收藏']}}" wx:key="*this" class="{{access===item?'selected':''}}" data-value="{{item}}" bindtap="access">{{item}}<text wx:if="{{item==='收藏' && favoriteCount}}"> {{favoriteCount}}</text></view></view><picker range="{{groups}}" value="{{groupIndex}}" bindchange="group"><view class="group-picker">{{groups[groupIndex]}} <ui-icon name="chevron-down" size="26"/></view></picker></view>
+ <view class="list-note"><text>找到 {{total}} 款</text><text>{{layoutCount}} 种版式 · 多种配色与疏密</text></view>
+ <view class="template-grid">
+  <view wx:for="{{list}}" wx:key="id" class="template-card" data-id="{{item.id}}" bindtap="preview">
+   <view class="template-cover cover-{{index%4}}" style="background:{{item.tint}}"><view class="mini-paper"><resume-paper design="{{item}}" thumbnail="{{true}}"/></view><view class="template-badge {{item.free?'free':''}}">{{item.free?'免费使用':'观看解锁'}}</view><view wx:if="{{item.isNew}}" class="new-mark">新</view><view class="favorite-button {{item.favorite?'is-favorite':''}}" catchtap="favorite" data-id="{{item.id}}" role="button" aria-label="{{item.favorite?'取消收藏':'收藏模板'}}"><view class="favorite-disc"><ui-icon name="heart" size="32" filled="{{item.favorite}}"/></view></view></view>
+   <view class="template-info"><view class="template-name">{{item.name}}<ui-icon name="arrow-up-right" size="26"/></view><view class="template-tags">{{item.tags[0]}}<text>·</text>{{item.densityName}}</view></view>
+  </view>
+ </view>
+ <view wx:if="{{!list.length}}" class="empty"><view class="empty-icon"><ui-icon name="grid" size="44"/></view><view class="empty-title">{{access==='收藏'?'还没有符合条件的收藏':'暂时没找到合适的模板'}}</view><view class="muted small">{{access==='收藏'?'点一下模板上的爱心，下次更容易找到。':'换个关键词，或调整岗位和版式试试。'}}</view><button class="outline" bindtap="reset">查看全部模板</button></view>
+ <button wx:if="{{hasMore}}" class="load-more outline" bindtap="loadMore">再看看更多模板 <text>已显示 {{shown}} / {{total}}</text></button>
+ <view wx:elif="{{list.length}}" class="list-end">已经看到这里了 · 共 {{total}} 款</view>
+</view>

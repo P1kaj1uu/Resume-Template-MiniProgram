@@ -1,0 +1,14 @@
+<view class="paper {{resolved.style}} {{resolved.density}} {{layout.columns?'has-columns':''}} {{thumbnail?'thumb-preview':''}}" style="--accent:{{resolved.color}};--tint:{{resolved.tint}};--header-bleed:{{resolved.headerBleed}}%;padding:{{resolved.paperPadding}}%">
+ <view class="paper-corner"></view>
+ <view class="paper-top header-{{layout.header}}"><view class="identity"><view class="name">{{content.name || '你的姓名'}}</view><view class="role">{{content.role || '目标职位'}}<text wx:if="{{content.city}}"> · {{content.city}}</text></view></view><view class="monogram">个人简历</view></view>
+ <view class="contact"><text wx:if="{{content.phone}}">{{content.phone}}</text><text wx:if="{{content.email}}">{{content.email}}</text><text wx:if="{{!content.phone && !content.email}}">联系方式</text></view>
+ <view wx:if="{{!thumbnail}}" class="paper-body columns-{{layout.columns}}">
+  <view wx:if="{{side.length}}" class="side-column"><resume-section wx:for="{{side}}" wx:key="key" section="{{item}}" design="{{resolved}}" heading="{{layout.heading}}"/></view>
+  <view class="main-column"><resume-section wx:for="{{main}}" wx:key="key" section="{{item}}" design="{{resolved}}" heading="{{layout.heading}}"/></view>
+ </view>
+ <view wx:else class="paper-body columns-{{layout.columns}} thumb-body">
+  <view wx:if="{{thumbSide.length}}" class="side-column"><view wx:for="{{thumbSide}}" wx:key="key" class="thumb-section heading-{{layout.heading}}"><view class="thumb-heading"><text wx:if="{{layout.heading==='number'}}">{{item.number}} </text>{{item.title}}</view><view class="thumb-primary">{{item.preview}}</view><view class="thumb-lines"></view></view></view>
+  <view class="main-column"><view wx:for="{{thumbMain}}" wx:key="key" class="thumb-section heading-{{layout.heading}}"><view class="thumb-heading"><text wx:if="{{layout.heading==='number'}}">{{item.number}} </text>{{item.title}}</view><view class="thumb-primary">{{item.preview}}</view><view class="thumb-lines"></view></view></view>
+ </view>
+ <view class="paper-bottom"></view>
+</view>

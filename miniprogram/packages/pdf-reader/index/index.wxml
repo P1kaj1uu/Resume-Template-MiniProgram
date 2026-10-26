@@ -1,0 +1,9 @@
+<page-head title="本机文件体检" back/>
+<view class="page file-page">
+ <view class="eyebrow">文件留在这台设备</view><view class="page-title">选一份简历，<view>读一读里面的经历。</view></view><view class="subtitle">直接读取文件中的文字，在本机给出修改建议。</view>
+ <view class="file-zone" bindtap="choose"><view class="file-icon"><ui-icon name="file" size="40"/></view><view class="file-title">{{file?file.name:'选择简历文件'}}</view><view class="small muted">{{file?file.size+' 兆 · 点击重新选择':'从微信文件选择器中选取便携文档'}}</view><view class="file-tip">最大八兆、十五页 · 支持文字型文档</view></view>
+ <view class="card job-card"><text class="label">准备投递什么岗位？<text class="optional">选填</text></text><textarea value="{{job}}" bindinput="input" maxlength="3000" placeholder="写下岗位名称，或粘贴职位要求。"/></view>
+ <view wx:if="{{error}}" class="notice error">{{error}}</view><button class="start" bindtap="run" loading="{{busy}}" disabled="{{busy}}"><text>{{busy?stage:'读取并检查'}}</text><ui-icon wx:if="{{!busy}}" name="arrow-right" size="28"/></button><view class="local-note">文件和文字均在当前设备处理，不上传</view>
+ <view wx:if="{{report}}" id="report"><view class="section-head"><view class="section-title">检查结果</view><view class="pill">已读取 {{pageCount}} 页</view></view><view class="card"><view class="result-number">{{report.passed}}<text> / {{report.total}}</text></view><view class="result-desc">{{report.summary}}</view><view class="checks"><view class="check-item" wx:for="{{report.strengths}}" wx:key="*this"><ui-icon name="check" size="22"/><text>{{item}}</text></view></view></view><view class="card advice" wx:for="{{report.issues}}" wx:key="title"><view class="advice-title">{{index+1}}. {{item.title}}</view><view class="result-desc">{{item.suggestion}}</view></view><view class="notice">{{report.note}}</view><button class="outline" bindtap="copy">复制修改建议</button></view>
+ <view class="notice">照片、扫描件或没有文字层的文档暂不支持。文件若已加密，请先移除密码；也可以返回粘贴文字检查。</view>
+</view>

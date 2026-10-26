@@ -1,0 +1,12 @@
+const fs=require('node:fs'),path=require('node:path'),esbuild=require('esbuild');
+const root=path.resolve(__dirname,'..'),vendor=path.join(root,'miniprogram/packages/pdf-reader/vendor');
+fs.mkdirSync(vendor,{recursive:true});
+const banner="const __host=globalThis;const __pdfScope=Object.create(__host,{document:{value:undefined},pdfjsWorker:{value:undefined,writable:true},fetch:{value:()=>__pdfPromise.reject(new Error('仅允许本机资源'))}});class __pdfPromise extends Promise{};let __pdfURL=__host.URL,__pdfAbortSignal=__host.AbortSignal,__pdfAbortController=__host.AbortController,__pdfReadableStream=__host.ReadableStream,__pdfStructuredClone=__host.structuredClone?__host.structuredClone.bind(__host):undefined;try{({}) instanceof __pdfURL;}catch(e){__pdfURL=class{constructor(){throw new Error('不允许外部文件地址');}};}";
+esbuild.buildSync({entryPoints:[path.join(__dirname,'pdf-entry.js')],outfile:path.join(vendor,'parser.js'),bundle:true,format:'cjs',platform:'browser',target:'es2020',minify:true,legalComments:'eof',banner:{js:banner},define:{process:'undefined',globalThis:'__pdfScope',window:'__pdfScope',self:'__pdfScope',document:'__pdfScope.document',fetch:'__pdfScope.fetch',URL:'__pdfURL',Promise:'__pdfPromise',AbortSignal:'__pdfAbortSignal',AbortController:'__pdfAbortController',ReadableStream:'__pdfReadableStream',structuredClone:'__pdfStructuredClone'},logLevel:'warning'});
+const maps={};for(const file of fs.readdirSync(path.join(root,'node_modules/pdfjs-dist/cmaps')).filter(f=>f.endsWith('.bcmap')))maps[file.slice(0,-6)]=fs.readFileSync(path.join(root,'node_modules/pdfjs-dist/cmaps',file)).toString('base64');
+fs.mkdirSync(path.join(root,'miniprogram/vendor'),{recursive:true});
+fs.writeFileSync(path.join(root,'miniprogram/vendor/pdf-cmaps.js'),'// Generated packed character maps from Mozilla PDF.js. See THIRD_PARTY_LICENSES.md.\nmodule.exports='+JSON.stringify(maps)+';\n');
+fs.copyFileSync(path.join(root,'node_modules/pdfjs-dist/LICENSE'),path.join(vendor,'LICENSE.txt'));
+fs.copyFileSync(path.join(root,'node_modules/pdfjs-dist/cmaps/LICENSE'),path.join(vendor,'CMAP_LICENSE.txt'));
+fs.writeFileSync(path.join(vendor,'THIRD_PARTY_LICENSES.txt'),['web-streams-polyfill','@ungap/structured-clone','abort-controller','event-target-shim'].map(name=>name+'\n\n'+fs.readFileSync(path.join(root,'node_modules',name,'LICENSE'),'utf8')).join('\n\n'));
+console.log('本机解析器已构建：'+fs.statSync(path.join(vendor,'parser.js')).size+' 字节；字符映射 '+Object.keys(maps).length+' 份。');
