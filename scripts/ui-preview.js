@@ -2,7 +2,7 @@
 const fs=require('node:fs'),path=require('node:path'),sax=require('sax');
 const width=Number(process.env.UI_WIDTH)||375,height=Number(process.env.UI_HEIGHT)||812,ratio=width/750;
 const root=path.resolve(__dirname,'../miniprogram'),out=path.resolve(__dirname,'../artifacts/ui'+(width===375?'':'-'+width));
-const store=require('../miniprogram/utils/data'),{templates}=require('../miniprogram/utils/catalog'),{effectiveDesign}=require('../miniprogram/utils/content-schema'),{layoutFor,sectionsFor,partitionSections}=require('../miniprogram/utils/layout'),icons=require('../miniprogram/utils/icons');
+const store=require('../.build/miniprogram/utils/data'),{templates}=require('../.build/miniprogram/utils/catalog'),{effectiveDesign}=require('../.build/miniprogram/utils/content-schema'),{layoutFor,sectionsFor,partitionSections}=require('../.build/miniprogram/utils/layout'),icons=require('../.build/miniprogram/utils/icons');
 fs.mkdirSync(out,{recursive:true});
 const escape=v=>String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 function expr(value,data){try{return Function('data','with(data){return ('+value+')}')(data);}catch(e){return '';}}
@@ -28,13 +28,21 @@ function render(n,data,skip=false){
  const tag=n.tag==='text'?'span':['view','scroll-view','picker','checkbox-group','label'].includes(n.tag)?'div':n.tag;
  let htmlAttrs='';for(const key of ['class','id','style','placeholder','value','type'])if(attrs[key]!==undefined)htmlAttrs+=' '+key+'="'+escape(String(attrs[key]).replace(/(-?\d*\.?\d+)rpx/g,(_,n)=>Number(n)/2+'px'))+'"';
  if(attrs.disabled)htmlAttrs+=' disabled';
+ if(n.tag==='image'){
+  const relative=String(attrs.src||'').replace(/^\//,''),target=path.join(out,'assets',relative);
+  if(relative&&fs.existsSync(path.join(root,relative))){fs.mkdirSync(path.dirname(target),{recursive:true});fs.copyFileSync(path.join(root,relative),target);}
+  return '<img'+htmlAttrs+' src="assets/'+escape(relative)+'" alt="'+escape(attrs['aria-label']||'')+'"/>';
+ }
  if(tag==='input')return '<input'+htmlAttrs+' readonly/>';
  return '<'+tag+htmlAttrs+'>'+children(n.children,data)+'</'+tag+'>';
 }
 const tabs=[{name:'首页',path:'index',icon:'home'},{name:'模板',path:'templates',icon:'grid'},{name:'简历',path:'resumes',icon:'file'},{name:'我的',path:'profile',icon:'user'}];
 const resume={id:'sample',title:'我的求职简历',templateId:'classic',content:store.blank()};
-const {sectionRows}=require('../miniprogram/utils/layout'),{preferenceOptions}=require('../miniprogram/utils/editor-fields');
+const {sectionRows}=require('../.build/miniprogram/utils/layout'),{preferenceOptions}=require('../.build/miniprogram/utils/editor-fields');
+let authorData;
+require('node:vm').runInNewContext(fs.readFileSync(path.resolve(__dirname,'../.build/miniprogram/packages/author/index/index.js'),'utf8'),{exports:{},Page:page=>authorData=page.data});
 const frames=[
+ {id:'author',title:'联系作者',file:'packages/author/index/index',data:authorData},
  {id:'home',title:'首页',file:'pages/index/index',tab:0,data:{featured:templates.slice(0,4),templateCount:320,layoutCount:32,resumeCount:0,recent:null}},
  {id:'templates',title:'模板馆',file:'pages/templates/templates',tab:1,data:{target:null,catalogCount:320,layoutCount:32,query:'',categories:['全部','通用','应届生','产品岗','技术岗'],active:'全部',access:'全部',favoriteCount:1,groups:['全部版式'],groupIndex:0,total:320,list:templates.slice(0,6).map((t,i)=>({...t,favorite:i===1})),hasMore:true,shown:18}},
  {id:'editor',title:'编辑与返回',file:'pages/editor/editor',data:{resume,progress:0,saved:'已保存至本机',active:0,tabs:['基本资料','经历项目','补充内容','排版设置'],templates,templateIndex:0}},

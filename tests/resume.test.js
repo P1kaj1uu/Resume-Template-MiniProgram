@@ -1,9 +1,9 @@
 const {test,beforeEach}=require('node:test'),assert=require('node:assert/strict');
-const store=require('../miniprogram/utils/data'),pdf=require('../miniprogram/utils/pdf');
-const {templates}=require('../miniprogram/utils/catalog');
-const {normalizeContent}=require('../miniprogram/utils/content-schema');
-const {sectionsFor,partitionSections}=require('../miniprogram/utils/layout');
-const {review}=require('../miniprogram/utils/review');
+const store=require('../.build/miniprogram/utils/data'),pdf=require('../.build/miniprogram/utils/pdf');
+const {templates}=require('../.build/miniprogram/utils/catalog');
+const {normalizeContent}=require('../.build/miniprogram/utils/content-schema');
+const {sectionsFor,partitionSections}=require('../.build/miniprogram/utils/layout');
+const {review}=require('../.build/miniprogram/utils/review');
 const {detailed}=require('./fixtures');
 let memory={};
 const put=(key,value)=>{memory[key]=JSON.parse(JSON.stringify(value));};

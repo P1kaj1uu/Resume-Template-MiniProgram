@@ -2,7 +2,7 @@ const automator=require('miniprogram-automator');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
-const {templates}=require('../miniprogram/utils/catalog');
+const {templates}=require('../.build/miniprogram/utils/catalog');
 const routeEvent=value=>({currentTarget:{dataset:{value}}});
 const inputEvent=(key,value)=>({currentTarget:{dataset:{path:key}},detail:{value}});
 const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));

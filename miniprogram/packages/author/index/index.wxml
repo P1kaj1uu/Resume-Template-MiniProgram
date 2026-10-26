@@ -1,0 +1,43 @@
+<page-head title="联系作者" back/>
+<view class="page author-page">
+  <view class="author-heading">
+    <view class="eyebrow">不见水星记</view>
+    <view class="page-title">联系作者</view>
+    <view class="subtitle">交流技术，也聊聊合作。</view>
+  </view>
+
+  <view class="card introduction-card">
+    <view wx:for="{{introduction}}" wx:key="title" class="introduction-row">
+      <text class="introduction-icon" aria-hidden="true">{{item.icon}}</text>
+      <view class="introduction-copy">
+        <view class="introduction-title">{{item.title}}</view>
+        <text class="introduction-text" user-select>{{item.text}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="section-head"><view class="section-title">保持联系</view><text class="small muted">点击复制，方便找到我</text></view>
+  <view class="card contact-card">
+    <view class="contact-row">
+      <view class="contact-icon"><ui-icon name="wechat" size="36"/></view>
+      <view class="contact-copy"><view class="contact-label">微信</view><text class="contact-value" user-select>{{wechat}}</text></view>
+      <button class="copy-button" data-key="wechat" bindtap="copyContact" aria-label="复制微信号">复制</button>
+    </view>
+    <view class="contact-row">
+      <view class="contact-icon"><ui-icon name="mail" size="36"/></view>
+      <view class="contact-copy"><view class="contact-label">邮箱</view><text class="contact-value" user-select>{{email}}</text></view>
+      <button class="copy-button" data-key="email" bindtap="copyContact" aria-label="复制邮箱地址">复制</button>
+    </view>
+  </view>
+
+  <view wx:for="{{codes}}" wx:key="key" class="card qr-card">
+    <view class="qr-heading"><view class="qr-icon"><ui-icon name="{{item.icon}}" size="34"/></view><view class="section-title">{{item.title}}</view></view>
+    <view class="qr-description">{{item.description}}</view>
+    <view wx:if="{{imageErrors[item.key]}}" class="qr-error">
+      <text>图片暂时无法显示</text>
+      <button class="outline" data-key="{{item.key}}" bindtap="retryImage">重新加载</button>
+    </view>
+    <image wx:else class="qr-image" src="{{item.src}}" mode="widthFix" lazy-load="{{true}}" show-menu-by-longpress="{{true}}" data-key="{{item.key}}" bindtap="previewCode" binderror="imageFailed" role="button" aria-label="{{item.title}}，点击查看大图"/>
+    <view class="qr-hint">点击图片查看大图</view>
+  </view>
+</view>

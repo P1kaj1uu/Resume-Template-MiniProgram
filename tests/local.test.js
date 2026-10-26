@@ -1,12 +1,12 @@
 const {test,beforeEach}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
-const store=require('../miniprogram/utils/data'),{resumeText}=require('../miniprogram/utils/resume-text'),{detailed}=require('./fixtures');
-const {extractPdf,MAX_BYTES}=require('../miniprogram/packages/pdf-reader/extract'),{fontDocument}=require('./pdf-fixtures');
+const store=require('../.build/miniprogram/utils/data'),{resumeText}=require('../.build/miniprogram/utils/resume-text'),{detailed}=require('./fixtures');
+const {extractPdf,MAX_BYTES}=require('../.build/miniprogram/packages/pdf-reader/extract'),{fontDocument}=require('./pdf-fixtures');
 let memory;
 function noNetwork(){throw Error('本机功能不应使用网络或数据库');}
 beforeEach(()=>{memory={};global.wx={getStorageSync:k=>memory[k]&&JSON.parse(JSON.stringify(memory[k])),setStorageSync:(k,v)=>memory[k]=JSON.parse(JSON.stringify(v)),cloud:new Proxy({},{get:noNetwork}),request:noNetwork,uploadFile:noNetwork,login:noNetwork,pageScrollTo(){},showModal(){},showToast(){}};});
-function pageFor(file){let def;vm.runInNewContext(fs.readFileSync(require.resolve('../miniprogram/'+file),'utf8'),{Page:value=>def=value,wx:global.wx,require:p=>require(path.resolve(__dirname,'../miniprogram',path.dirname(file),p))});return {...def,data:JSON.parse(JSON.stringify(def.data)),setData(value){Object.assign(this.data,value);},getTabBar:()=>({setData(){}})};}
+function pageFor(file){let def;vm.runInNewContext(fs.readFileSync(require.resolve('../.build/miniprogram/'+file),'utf8'),{exports:{},Page:value=>def=value,wx:global.wx,require:p=>require(path.resolve(__dirname,'../.build/miniprogram',path.dirname(file),p))});return {...def,data:JSON.parse(JSON.stringify(def.data)),setData(value){Object.assign(this.data,value);},getTabBar:()=>({setData(){}})};}
 test('startup and profile never initialize services or require login',()=>{
- let app;vm.runInNewContext(fs.readFileSync(require.resolve('../miniprogram/app'),'utf8'),{App:value=>app=value,wx:global.wx});
+ let app;vm.runInNewContext(fs.readFileSync(require.resolve('../.build/miniprogram/app'),'utf8'),{exports:{},App:value=>app=value,wx:global.wx});
  assert.equal(app.globalData.storageMode,'local');const r=store.create('classic',true);store.toggleFavorite('classic');
  const page=pageFor('pages/profile/profile.js');page.onShow();assert.equal(page.data.count,1);assert.equal(page.data.favoriteCount,1);assert.ok(store.get(r.id));
  for(const key of ['login','backup','restore','deleteCloud'])assert.equal(page[key],undefined);
@@ -25,7 +25,7 @@ test('local parser reads compressed Chinese using packaged character maps withou
  finally{global.fetch=original;}
 });
 test('local parser reads exported PDF including optional Chinese sections',async()=>{
- const pdf=require('../miniprogram/utils/pdf'),r={content:detailed()},t=store.templates[0];
+ const pdf=require('../.build/miniprogram/utils/pdf'),r={content:detailed()},t=store.templates[0];
  const result=await extractPdf(new Uint8Array(Buffer.from(pdf.buildResume(r,t),'ascii')));assert.ok(result.text.includes('数据分析职业证书'));assert.ok(result.text.includes('志愿服务'));
 });
 test('scanned, encrypted, oversized and invalid documents have clear errors',async()=>{
@@ -36,15 +36,15 @@ test('scanned, encrypted, oversized and invalid documents have clear errors',asy
  await assert.rejects(extractPdf(new Uint8Array([1,2,3])),/有效/);
 });
 test('runtime application contains no database, upload or login calls',()=>{
- const root=path.resolve(__dirname,'../miniprogram');
+ const root=path.resolve(__dirname,'../.build/miniprogram');
  function walk(dir){for(const e of fs.readdirSync(dir,{withFileTypes:true})){const p=path.join(dir,e.name);if(e.isDirectory())walk(p);else if(p.endsWith('.js'))assert.ok(!/wx\s*\.\s*(cloud|request|uploadFile|login)\b/.test(fs.readFileSync(p,'utf8')),p);}}
  walk(root);assert.ok(!Object.hasOwn(JSON.parse(fs.readFileSync(path.resolve(__dirname,'../project.config.json'),'utf8')),'cloudfunctionRoot'));
 });
 test('parser works without browser streams, native structuredClone or abort APIs', {timeout:5000},async()=>{
  const context={module:{exports:{}},exports:{},console,setTimeout,clearTimeout,URL,TextDecoder,TextEncoder,atob,btoa};vm.createContext(context);
  vm.runInContext('delete Array.prototype.at;delete String.prototype.at;delete Object.getPrototypeOf(Uint8Array.prototype).at;',context);
- vm.runInContext(fs.readFileSync(path.resolve(__dirname,'../miniprogram/packages/pdf-reader/vendor/parser.js'),'utf8'),context);
- const maps=require('../miniprogram/vendor/pdf-cmaps');class C{fetch({name}){return Promise.resolve({cMapData:Uint8Array.from(atob(maps[name]),v=>v.charCodeAt(0)),isCompressed:true});}}
+ vm.runInContext(fs.readFileSync(path.resolve(__dirname,'../.build/miniprogram/packages/pdf-reader/vendor/parser.js'),'utf8'),context);
+ const maps=require('../.build/miniprogram/vendor/pdf-cmaps');class C{fetch({name}){return Promise.resolve({cMapData:Uint8Array.from(atob(maps[name]),v=>v.charCodeAt(0)),isCompressed:true});}}
  const task=context.module.exports.getDocument({data:fontDocument().bytes,CMapReaderFactory:C,useWorkerFetch:false,disableFontFace:true,isEvalSupported:false,verbosity:0});
  try{const doc=await task.promise,content=await(await doc.getPage(1)).getTextContent();assert.ok(content.items.some(row=>row.str.includes('浙江工商大学')));}
  finally{await task.destroy();}
@@ -56,8 +56,8 @@ test('local PDF parsing can be cancelled before or during work',async()=>{
 test('parser isolates read-only browser globals and works without a URL constructor', {timeout:5000},async()=>{
  const context={module:{exports:{}},exports:{},console,setTimeout,clearTimeout,TextDecoder,TextEncoder,atob,btoa};vm.createContext(context);
  vm.runInContext("Object.defineProperty(globalThis,'document',{get(){return null;}});Object.defineProperty(globalThis,'pdfjsWorker',{get(){return null;}});globalThis.URL=undefined;",context);
- vm.runInContext(fs.readFileSync(path.resolve(__dirname,'../miniprogram/packages/pdf-reader/vendor/parser.js'),'utf8'),context);
- const maps=require('../miniprogram/vendor/pdf-cmaps');class C{fetch({name}){return Promise.resolve({cMapData:Uint8Array.from(atob(maps[name]),v=>v.charCodeAt(0)),isCompressed:true});}}
+ vm.runInContext(fs.readFileSync(path.resolve(__dirname,'../.build/miniprogram/packages/pdf-reader/vendor/parser.js'),'utf8'),context);
+ const maps=require('../.build/miniprogram/vendor/pdf-cmaps');class C{fetch({name}){return Promise.resolve({cMapData:Uint8Array.from(atob(maps[name]),v=>v.charCodeAt(0)),isCompressed:true});}}
  const task=context.module.exports.getDocument({data:fontDocument().bytes,CMapReaderFactory:C,useWorkerFetch:false,disableFontFace:true,isEvalSupported:false,verbosity:0});
  try{const doc=await task.promise,content=await(await doc.getPage(1)).getTextContent();assert.ok(content.items.some(row=>row.str.includes('浙江工商大学')));assert.equal(vm.runInContext('globalThis.pdfjsWorker',context),null);assert.equal(vm.runInContext('globalThis.URL',context),undefined);}finally{await task.destroy();}
 });

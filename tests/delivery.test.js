@@ -1,5 +1,5 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
-const files=require('../miniprogram/utils/file-delivery');
+const files=require('../.build/miniprogram/utils/file-delivery');
 const filePath='wxfile://usr/林知夏_简历.pdf';
 function platform(value){global.wx={getDeviceInfo:()=>({platform:value})};}
 test('desktop saves the PDF to disk while mobile sends the actual PDF file',async()=>{
@@ -34,8 +34,8 @@ function previewPage(device,delivery,generate){
  Object.assign(wx,{showLoading(){},hideLoading(){},showToast:o=>calls.push(o.title),showModal:o=>calls.push(o.title),openDocument:async o=>{calls.push('preview');assert.equal(o.fileType,'pdf');}});
  wx[device==='windows'?'saveFileToDisk':'shareFileMessage']=delivery||((o)=>{calls.push('save');o.success();});
  let definition,generated=0;
- vm.runInNewContext(fs.readFileSync(require.resolve('../miniprogram/pages/preview/preview.js'),'utf8'),{
-  require:p=>p==='../../utils/pdf'?{pageCount:()=>1,exportResume:async()=>{generated++;return generate?generate():filePath;}}:require(path.resolve(__dirname,'../miniprogram/pages/preview',p)),
+ vm.runInNewContext(fs.readFileSync(require.resolve('../.build/miniprogram/pages/preview/preview.js'),'utf8'),{exports:{},
+  require:p=>p==='../../utils/pdf'?{pageCount:()=>1,exportResume:async()=>{generated++;return generate?generate():filePath;}}:require(path.resolve(__dirname,'../.build/miniprogram/pages/preview',p)),
   Page:value=>definition=value,wx:global.wx
  });
  const page={...definition,data:{...definition.data,resume:{content:{}},isSample:false,template:{free:true},exportWarnings:[{title:'建议补充联系方式'}]},setData(value){Object.assign(this.data,value);}};

@@ -46,6 +46,13 @@
   "sitemapLocation": "sitemap.json",
   "subPackages": [
     {
+      "root": "packages/author",
+      "name": "author",
+      "pages": [
+        "index/index"
+      ]
+    },
+    {
       "root": "packages/pdf-reader",
       "name": "pdf-reader",
       "pages": [

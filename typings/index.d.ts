@@ -1,8 +1,8 @@
-/// <reference path="./types/index.d.ts" />
+/// <reference types="miniprogram-api-typings" />
 
+/** App state; resume records remain in the device's local storage. */
 interface IAppOption {
   globalData: {
-    userInfo?: WechatMiniprogram.UserInfo,
-  }
-  userInfoReadyCallback?: WechatMiniprogram.GetUserInfoSuccessCallback,
+    storageMode: 'local';
+  };
 }

@@ -1,5 +1,5 @@
 const automator=require('miniprogram-automator'),assert=require('node:assert/strict'),path=require('node:path');
-const {fontDocument}=require('../tests/pdf-fixtures'),{buildResume}=require('../miniprogram/utils/pdf'),{detailed}=require('../tests/fixtures'),{templates}=require('../miniprogram/utils/catalog');
+const {fontDocument}=require('../tests/pdf-fixtures'),{buildResume}=require('../.build/miniprogram/utils/pdf'),{detailed}=require('../tests/fixtures'),{templates}=require('../.build/miniprogram/utils/catalog');
 (async()=>{
  const mini=await automator.connect({wsEndpoint:process.env.WECHAT_WS||'ws://127.0.0.1:9436'});let probe;
  mini.on('exception',error=>console.log('运行异常：'+JSON.stringify(error).slice(0,900)));

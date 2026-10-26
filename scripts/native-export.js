@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const parse = require('pdf-parse/lib/pdf-parse.js');
-const { templates } = require('../miniprogram/utils/data');
+const { templates } = require('../.build/miniprogram/utils/data');
 const { detailed } = require('../tests/fixtures');
 
 (async () => {

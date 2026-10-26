@@ -1,0 +1,139 @@
+.author-page {
+  padding-bottom: calc(60rpx + env(safe-area-inset-bottom));
+}
+.author-heading {
+  padding: 8rpx 0 30rpx;
+}
+.introduction-card {
+  padding: 8rpx 26rpx;
+}
+.introduction-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 20rpx;
+  padding: 25rpx 0;
+  border-bottom: 1rpx solid #eef1e9;
+}
+.introduction-row:last-child {
+  border-bottom: 0;
+}
+.introduction-icon {
+  flex-shrink: 0;
+  width: 48rpx;
+  font-size: 34rpx;
+  line-height: 1.4;
+  text-align: center;
+}
+.introduction-copy,
+.contact-copy {
+  flex: 1;
+  min-width: 0;
+}
+.introduction-title {
+  color: #40543a;
+  font-size: 26rpx;
+  font-weight: 600;
+  margin-bottom: 9rpx;
+}
+.introduction-text {
+  color: #74816c;
+  font-size: 25rpx;
+  line-height: 1.9;
+  overflow-wrap: anywhere;
+}
+.section-head {
+  flex-wrap: wrap;
+  gap: 8rpx 20rpx;
+}
+.contact-card {
+  padding: 0 24rpx;
+}
+.contact-row {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  padding: 23rpx 0;
+  border-bottom: 1rpx solid #eef1e9;
+}
+.contact-row:last-child {
+  border-bottom: 0;
+}
+.contact-icon,
+.qr-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 54rpx;
+  height: 54rpx;
+  border-radius: 13rpx;
+  color: #56744a;
+  background: #edf2e7;
+}
+.contact-label {
+  font-size: 22rpx;
+  color: #87917d;
+  margin-bottom: 3rpx;
+}
+.contact-value {
+  color: #40543a;
+  font-size: 26rpx;
+  overflow-wrap: anywhere;
+  word-break: break-all;
+}
+button.copy-button:not([size='mini']) {
+  width: auto;
+  flex-shrink: 0;
+  min-width: 88rpx;
+  min-height: 44px;
+  padding: 12rpx 18rpx;
+  border-radius: 12rpx;
+  color: #526f49;
+  background: #edf2e7;
+  font-size: 23rpx;
+  font-weight: 500;
+}
+.qr-card {
+  margin-top: 28rpx;
+  padding: 26rpx;
+}
+.qr-heading {
+  display: flex;
+  align-items: center;
+  gap: 15rpx;
+}
+.qr-heading .section-title {
+  font-size: 29rpx;
+}
+.qr-description {
+  margin: 16rpx 0 24rpx;
+  color: #7e8975;
+  font-size: 23rpx;
+  line-height: 1.8;
+}
+.qr-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 540rpx;
+  margin: 0 auto;
+  border-radius: 14rpx;
+  background: #f8faf5;
+}
+.qr-hint {
+  text-align: center;
+  color: #8b977f;
+  font-size: 21rpx;
+  margin-top: 20rpx;
+}
+.qr-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20rpx;
+  padding: 50rpx 24rpx;
+  background: #f8faf5;
+  border-radius: 14rpx;
+  color: #7e8975;
+  font-size: 24rpx;
+}

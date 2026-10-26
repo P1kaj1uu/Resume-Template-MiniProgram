@@ -1,2 +1,0 @@
-App({globalData:{storageMode:'local'}});
-

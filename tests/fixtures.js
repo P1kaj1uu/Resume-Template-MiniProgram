@@ -1,5 +1,5 @@
-const {sample}=require('../miniprogram/utils/data');
-const {normalizeContent}=require('../miniprogram/utils/content-schema');
+const {sample}=require('../.build/miniprogram/utils/data');
+const {normalizeContent}=require('../.build/miniprogram/utils/content-schema');
 function detailed(){
  const c=normalizeContent(JSON.parse(JSON.stringify(sample)));
  c.internships=[{id:'intern1',company:'实习单位示例',position:'运营实习生',period:'2023.07 — 2023.09',detail:'独立整理用户反馈，协助完成活动执行与复盘。'}];

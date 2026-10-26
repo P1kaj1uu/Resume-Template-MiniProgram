@@ -1,6 +1,6 @@
-# 好简历
+# 不见水星记-简历模版制作小程序
 
-微信原生简历小程序，所有简历数据保存在当前手机或电脑。无需账号、服务器或数据库；保留原项目 AppID，基础库固定为 3.9.3。
+微信原生 TypeScript 简历小程序，所有简历数据保存在当前手机或电脑。无需账号、服务器或数据库；保留原项目 AppID，基础库固定为 3.9.3。
 
 ## 当前功能
 
@@ -12,6 +12,8 @@
 - 本机 PDF 解析支持常见压缩内容和中文字体映射，最多八兆、十五页、六万字以内。扫描件或照片没有文字层时会提示改用文字型文档；加密文件需先移除密码。文件选择使用微信提供的文件选择器。
 - 原微信登录、远程备份恢复、文件上传解析、云函数和数据库代码已移除。本机简历、收藏、历史版本和广告解锁记录不自动同步设备。
 - 保留微信激励视频解锁精选模板。广告需要网络，但程序不会向广告接口提供简历正文；完整观看后在本机保存解锁权益。若设备空间不足，仍可在本次运行中使用，并明确提示记录未保存。
+
+“我的”页面提供“联系作者”入口，位于“使用帮助”上方。作者页展示介绍、合作方向、微信与邮箱，支持复制联系方式及查看微信二维码、收款码大图。图片原件位于 `images/`，页面使用 `miniprogram/packages/author/images/` 中的副本，随作者分包加载。
 
 ## 数据保管
 
@@ -25,7 +27,7 @@
 
 ## 运行与检查
 
-在微信开发者工具导入项目根目录即可编译。解析器和字库已经随源码提供，不需要配置云环境、数据库或模型密钥。
+在微信开发者工具导入项目根目录即可编译，`project.config.json` 已启用 `typescript` 编译插件。解析器和字库已经随源码提供，不需要配置云环境、数据库或模型密钥。
 
 开发时执行：
 
@@ -34,6 +36,10 @@ npm ci
 npm run check
 npm test
 ```
+
+`npm run typecheck` 执行严格类型检查；`npm run build` 将业务源码编译为 CommonJS，并复制页面资源至 `.build/miniprogram/`，供 Node 测试与辅助脚本使用。构建产物已加入 Git 忽略，业务源码目录中不保留同名 JS 文件。微信开发者工具直接编译 `miniprogram/` 下的 TS，无需将运行目录改为 `.build`。
+
+`npm test` 会先检查类型并重新构建，覆盖自动保存、中文输入、存储失败、历史版本、模板与文件导出等行为；另有 320 款模板的 PDF 字节摘要回归，用于核对 TS 迁移前后的导出结果。`npm run format` 格式化业务源码，`npm run format:check` 检查格式。
 
 修改解析器入口或更新依赖后执行 `npm run build:pdf`，生成文件位于 `miniprogram/packages/pdf-reader/vendor/` 和 `miniprogram/vendor/pdf-cmaps.js`。解析页按分包加载，168 份字符映射在程序内读取；不通过外部网址加载文档或字库。
 
@@ -47,15 +53,18 @@ WECHAT_WS=ws://127.0.0.1:9437 WECHAT_SKIP_SCREENSHOTS=1 npm run test:local
 - `npm run test:export`：实际点击下载，核对提前生成的 PDF、中文、链接及页数；系统保存和发送窗口为测试替身。
 - `npm run test:e2e`：编辑、恢复、模板、收藏及文字检查等主要流程。
 - `npm run test:navigation`：真实点击预览页的返回编辑按钮，核对内容保留和页面栈。
-- `npm run check`：全部页面和组件引用、语法、配置及主包与分包源码大小检查。
-- `node scripts/inspect-layouts.js`：32 种版式逐款检查可见章节。
+- `npm run check`：严格类型检查、构建，以及全部页面和组件引用、语法、配置及编译后的主包与分包大小检查。
+- `npm run test:layouts`：32 种版式逐款检查可见章节。
+- `npm run preview:ui`：构建并生成本机静态页面预览。
 
 ## 广告配置
 
-仅需在 `miniprogram/config.js` 填写自己的 `rewardedAdUnitId`。未配置、取消或失败均不会假解锁，免费模板可直接使用。平台准入和收益结算由微信决定；本项目没有支付或自动续费。
+仅需在 `miniprogram/config.ts` 填写自己的 `rewardedAdUnitId`。未配置、取消或失败均不会假解锁，免费模板可直接使用。平台准入和收益结算由微信决定；本项目没有支付或自动续费。
 
 ## 代码与许可
 
-本机存储：`miniprogram/utils/data.js`；模板：`utils/catalog.js`；排版：`utils/layout.js`；本机文件解析：`packages/pdf-reader/extract.js`。
+本机存储：`miniprogram/utils/data.ts`；模板：`utils/catalog.ts`；排版：`utils/layout.ts`；本机文件解析：`packages/pdf-reader/extract.ts`；公共类型：`miniprogram/types/`。
+
+页面、组件与业务工具使用 TS；第三方 PDF 引擎、字库等 `vendor/` 文件保留原始 JS，并通过声明文件提供类型。Node 构建及测试脚本继续使用 JS。迁移保留页面路由、本机存储键和简历字段格式，原有草稿、收藏、历史版本及解锁记录继续读取。
 
 第三方组件及许可证见 [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md)。正式发布前，运营方需完善主体、联系渠道和微信后台的隐私保护指引。

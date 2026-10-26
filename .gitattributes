@@ -6,10 +6,12 @@
 *.js linguist-language=JavaScript
 *.wxml linguist-language=HTML
 *.wxss linguist-language=CSS
-*.wxs linguist-language=JavaScript
+*.wxs linguist-language=TypeScript
 
 # Bundled third-party code and generated assets are excluded from language stats.
 miniprogram/vendor/** linguist-vendored=true linguist-generated=true
 miniprogram/packages/pdf-reader/vendor/** linguist-vendored=true linguist-generated=true
 typings/types/wx/** linguist-vendored=true
 package-lock.json linguist-generated=true
+
+*.ts linguist-language=TypeScript

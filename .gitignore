@@ -32,3 +32,6 @@ Desktop.ini
 
 # Keep package-lock.json and the bundled PDF parser/maps versioned:
 # they are required for reproducible installs and direct DevTools imports.
+
+# Local TypeScript verification build
+/.build/

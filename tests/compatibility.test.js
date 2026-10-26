@@ -1,5 +1,5 @@
 const {test,beforeEach}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),os=require('node:os'),path=require('node:path');
-const {mount}=require('./page-helper'),store=require('../miniprogram/utils/data'),storage=require('../miniprogram/utils/storage'),pdf=require('../miniprogram/utils/pdf'),{detailed}=require('./fixtures');
+const {mount}=require('./page-helper'),store=require('../.build/miniprogram/utils/data'),storage=require('../.build/miniprogram/utils/storage'),pdf=require('../.build/miniprogram/utils/pdf'),{detailed}=require('./fixtures');
 let memory,calls;
 const put=(key,value)=>{if(storage.jsonBytes(value)>1024*1024)throw Error('single-key limit');memory[key]=JSON.parse(JSON.stringify(value));};
 beforeEach(()=>{memory={};calls=[];global.testPages=[];global.wx={getStorageSync:key=>memory[key]&&JSON.parse(JSON.stringify(memory[key])),setStorageSync:put,removeStorageSync:key=>delete memory[key],showToast:o=>calls.push(o.title),showModal:o=>{calls.push(o.title);if(o.success)o.success({confirm:true,content:'新名称'});else return Promise.resolve({confirm:true});},enableAlertBeforeUnload:()=>calls.push('protect'),disableAlertBeforeUnload:()=>calls.push('unprotect'),getDeviceInfo:()=>({platform:'ios'}),pageScrollTo(){},navigateTo:o=>calls.push(o.url),navigateBack:()=>calls.push('back'),redirectTo:o=>calls.push(o.url),switchTab:o=>{calls.push(o.url);if(o.complete)o.complete();}};});
@@ -49,9 +49,9 @@ test('read-only storage does not crash create, rename, duplicate or delete callb
  assert.ok(store.get(r.id));assert.ok(calls.includes('操作未完成'));
 });
 test('completed ad remains usable this session if saving entitlement fails, without hanging',async()=>{
- const config=require('../miniprogram/config'),before=config.rewardedAdUnitId;config.rewardedAdUnitId='test-ad';let close;
+ const config=require('../.build/miniprogram/config'),before=config.rewardedAdUnitId;config.rewardedAdUnitId='test-ad';let close;
  wx.createRewardedVideoAd=()=>({onClose:fn=>close=fn,onError(){},show:()=>Promise.resolve(),load:()=>Promise.resolve()});
- const reward=require('../miniprogram/utils/reward');try{const p=reward.unlock('compatibility-test-template');wx.setStorageSync=()=>{throw Error('full');};close({isEnded:true});const grant=await p;assert.equal(grant.persisted,false);assert.equal(reward.unlocked('compatibility-test-template'),true);}finally{config.rewardedAdUnitId=before;}
+ const reward=require('../.build/miniprogram/utils/reward');try{const p=reward.unlock('compatibility-test-template');wx.setStorageSync=()=>{throw Error('full');};close({isEnded:true});const grant=await p;assert.equal(grant.persisted,false);assert.equal(reward.unlocked('compatibility-test-template'),true);}finally{config.rewardedAdUnitId=before;}
 });
 test('active tab and repeated home tap cannot clear template context or create duplicate editors',()=>{
  memory.template_target_v1='target';const bar=mount('custom-tab-bar/index.js','Component');bar.data.selected=1;bar.switchTab({currentTarget:{dataset:{index:1}}});assert.equal(memory.template_target_v1,'target');assert.deepEqual(calls,[]);

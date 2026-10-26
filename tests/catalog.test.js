@@ -2,10 +2,10 @@ const {test,beforeEach}=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
-const {templates,families,filterTemplates}=require('../miniprogram/utils/catalog');
-const {layoutFor,sectionsFor,partitionSections}=require('../miniprogram/utils/layout');
-const store=require('../miniprogram/utils/data');
-const pdf=require('../miniprogram/utils/pdf');
+const {templates,families,filterTemplates}=require('../.build/miniprogram/utils/catalog');
+const {layoutFor,sectionsFor,partitionSections}=require('../.build/miniprogram/utils/layout');
+const store=require('../.build/miniprogram/utils/data');
+const pdf=require('../.build/miniprogram/utils/pdf');
 let memory={};
 global.wx={getStorageSync:key=>memory[key]&&JSON.parse(JSON.stringify(memory[key])),setStorageSync:(key,value)=>memory[key]=JSON.parse(JSON.stringify(value))};
 beforeEach(()=>{memory={};});
@@ -56,7 +56,7 @@ test('all 32 layouts retain the ends of long text in both columns across pages',
  }
 });
 test('built-in page text and template ornament contain no English words',()=>{
- const root=path.resolve(__dirname,'../miniprogram');
+ const root=path.resolve(__dirname,'../.build/miniprogram');
  function check(dir){for(const e of fs.readdirSync(dir,{withFileTypes:true})){const p=path.join(dir,e.name);if(e.isDirectory())check(p);else if(p.endsWith('.wxml')){
   const source=fs.readFileSync(p,'utf8').replace(/\{\{[\s\S]*?\}\}/g,m=>(m.match(/'[^']*'/g)||[]).join('')).replace(/<[^>]*>/g,'');
   assert.ok(!/[A-Za-z]{2,}/.test(source),path.relative(root,p)+': '+source.match(/[A-Za-z]{2,}/));

@@ -1,0 +1,6 @@
+node_modules/
+.build/
+artifacts/
+miniprogram/vendor/
+miniprogram/packages/pdf-reader/vendor/
+miniprogram/utils/cmap.ts
